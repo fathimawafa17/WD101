@@ -1,127 +1,81 @@
-let element = (id) => document.getElementById(id);
+const form = document.querySelector("#user-form");
+const table = document.querySelector("#user-table");
+const UserData = document.querySelector("#user-data");
+const NameInput = document.querySelector("#name");
+const EmailInput = document.querySelector("#email");
+const PasswordInput = document.querySelector("#password");
+const dobInput = document.querySelector("#dob");
+const termsCheckbox = document.querySelector("#terms");
 
-let classes = (classes) => document.getElementsByClassName(classes);
+// Load data from web storage
+const loadData = () => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  users.forEach((user) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${user.Name}</td>
+      <td>${user.Email}</td>
+      <td>${user.Password}</td>
+      <td>${user.Dob}</td>
+      <td>${user.Terms ? "Yes" : "No"}</td>
+    `;
+    UserData.appendChild(row);
+  });
+};
 
-let user_entries = [];
+// Save data to web storage
+const saveData = (users) => {
+  localStorage.setItem("users", JSON.stringify(users));
+};
 
-function fillTablee(){
-    let obj = localStorage.getItem("user_entries");
-    if(obj){
-        user_entries = JSON.parse(obj);
-    }else{
-        user_entries = [];
-    }
-    return user_entries;
-}
-user_entries = fillTablee();
+// Add a new user to the table and storage
+const addUser = (user) => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${user.name}</td>
+    <td>${user.email}</td>
+    <td>${user.password}</td>
+    <td>${user.dob}</td>
+    <td>${user.terms ? "Yes" : "No"}</td>
+  `;
+  UserData.appendChild(row);
 
-let username = element("name"),
-  email = element("email"),
-  password = element("password"),
-  tc = element("tc"),
-  dob = element("dob");
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  users.push(user);
+  saveData(users);
+};
 
-let errormsg = classes("errormsg");
+// Form submission listener
+const submitListener = (event) => {
+  event.preventDefault();
 
-let form = element("form");
+  const Name = NameInput.value.trim();
+  const Email = EmailInput.value.trim();
+  const Password = PasswordInput.value.trim();
+  const Dob = dobInput.value;
+  const Terms = termsCheckbox.checked;
 
-function verify(elem,message,cnd){
-    if(cnd){
-        elem.style.border = "2px solid blue";
-        elem.setCustomValidity(message);
-        elem.reportValidity();
-    }else{
-        elem.style.border = "2px solid yellow";
-        elem.setCustomValidity('');
+  // Additional validation for date of birth
+  const dobDate = new Date(dob);
+  const dobYear = dobDate.getFullYear();
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const age = currentYear - dobYear;
+  if (age <= 18 || age >= 55) {
+    alert("Please enter a valid date of birth between ages 18 and 55.");
+    return;
+  }
 
-    }
-}
+  // Add user to table and storage
+  const user = { Name, Email, Password, Dob, Terms };
+  addUser(user);
 
-function checkDOB(){
-    let age = new Date().getFullYear() - new Date(dob.value).getFullYear();
-    if(age < 18 || age>55){
-        return false;
-    }else{
-        return true;
-    }
-}
-let message_name = "USERNAME MUST BE ATLEAST 3 CHARACTERS LONG";
-let message_email = "EMAIL MUST BE VALID";
-let message_agree = "YOU MUST AGREE TO TERMS AND CONDITIONS";
-let message_dob = "YOUR AGE MUST BE BETWEEN 18 AND 55 TO CONTINUE";
+  // Reset form
+  form.reset();
+  NameInput.focus();
+};
 
-username.addEventListener("input", (e) => {
-    let cond_name = username.value.length < 3;
-    e.preventDefault();
-    verify(username,message_name,cond_name);
+// Load data from storage when page is loaded
+window.addEventListener("load", () => {
+  loadData();
 });
-
-email.AddEventListener("input", (e) => {
-    let cond_email = !(email.value.includes("@") && email.value.includes("."));
-    e.preventDefault();
-    verify(email,message_email,cond_email);
-});
-
-dob.AddEventListener("input", (e) => {
-    let cond_dob = !checkDOB();
-    e.preventDefault();
-    verify(dob,message_dob,cond_dob);
-});
-tc.AddEventListener("input", (e) => {
-    let cond_agree = !tc.checked;
-    e.preventDefault();
-    verify(tc,message_agree,cond_agree);
-});
-
-function makeobject(){
-    let check = false;
-    if(tc.checked){
-        check = true;
-    }
-    let obj = {
-        name: username.value,
-        email: email.value,
-        password: password.value,
-        dob: dob.value,
-        checked: check
-    }
-    return obj;
-}
-
-
-function displayTable(){
-    let table = element("user-table");
-    let entries = user_entries;
-    let str = `<tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Dob</th>
-                    <th>Accepted terms?</th>
-                </tr>\n`;
-    for(let i=0;i<entries.length;i++){
-        str += `<tr>
-                    <td>${entries[i].name}</td>
-                    <td>${entries[i].email}</td>
-                    <td>${entries[i].password}</td>
-                    <td>${entries[i].dob}</td>
-                    <td>${entries[i].checked}</td>
-                </tr>\n`;
-    }
-    table.innerHTML = str;
-}
-
-form.AddEventListener("submit", (e) => {
-    let cond_agree= !tc.checked;
-    e.preventDefault();
-    console.log('working');
-    if (!cond_agree) {
-        let obj = makeobject();
-        user_entries.push(obj);
-        localStorage.setItem("user_entries", JSON.stringify(user_entries));
-    }
-    displayTable();
-});
-window.onload = (event) => {
-    displayTable();
-}
