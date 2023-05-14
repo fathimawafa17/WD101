@@ -1,6 +1,6 @@
 function Check_the_dob(dob) {
   var age = new Date().getFullYear() - new Date(dob.value).getFullYear();
-  if (age <= 18 || age >= 55) {
+  if (age < 18 || age > 55) {
     dob.setCustomValidity("The age should be between 18 and 55");
     dob.reportValidity();
   } else {
@@ -38,9 +38,9 @@ function check_the_tick(tick) {
 }
 
 dob = document.getElementById("dob");
-var Password = document.getElementById("Password");
-var Tick = document.getElementById("check-box");
-var Email = document.getElementById("Email");
+var password = document.getElementById("password");
+var tick = document.getElementById("check-box");
+var email = document.getElementById("email");
 var name_of_the_user = document.getElementById("name");
 
 email.addEventListener("input", () => check_the_email(email));
