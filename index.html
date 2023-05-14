@@ -1,55 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-	
-	<title> REGISTRATION FORM</title>
-    
-<body>
-	<h1>REGISTER FORM</h1>
-	<div id = "reg form">
-        <form id="form">
-        <div id="names" class="inputs">
-            <label for ="First name" > First name :</label>
-            <input id="name" type="text" name=" First Name" placeholder="Your First Name" required><br>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <form id="user-form" class="form">
+        <h2>Registration Form</h2>
+        <div class="form-control">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your name" required>
         </div>
-	    <div class="inputs">
-			<label for="email"> E-mail :</label>
-			<input id="email" type="email" name="email"placeholder="Your email" required>
-		</div>
-        <div class="inputs">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter Password" required/>
+        <div class="form-control">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
         </div>
-          <div id="dob_id" class="inputs">
-            <label for="dob">Date of Birth</label>
-            <input id="dob" name="dob" type="date" required/>
-          </div>
-        <div class="test">
-            <label for = "agree" required>  I agree to share term and condition</label>
-            <input type="checkbox" name="agree" id="tc"><br>   
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
         </div>
-
-        <div>
-            <input type="submit" value="Submit Now">
-            
+        <div class="form-control">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" name="dob" placeholder="dd-mm-yyyy" min="1968-02-09" max="2005-02-09" required>
         </div>
-        </form>
-        
-
-        
-       
-        <div id="table-box">
-            <h1>entries</h1>
-            <table id="user-table">
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>Dob</th>
-                <th>Accepted terms?
-          </div>
+        <div class="form-control">
+          <label for="terms">
+            <input type="checkbox" id="terms" name="terms" required>
+            Accept Terms & Conditions
+          </label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <div class="table-container">
+        <table id="user-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Password</th>
+              <th>DOB</th>
+              <th>Accepted terms?</th>
+            </tr>
+          </thead>
+          <tbody id="user-data"></tbody>
+        </table>
+      </div>
     </div>
-	
     <script src="index.js"></script>
-</body>
+  </body>
 </html>
