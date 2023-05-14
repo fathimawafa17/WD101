@@ -1,122 +1,55 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Registration Form</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        //Get the data from localStorage
-        var Data = JSON.parse(elocalStorag.getItem("registrationData"));
-        //Check if data exists
-        if (Data) {
-          populateTable(Data);
-        }
-        //Handle the submit button
-        $("#registration-form").submit(function(e){
-          //Get the values
-          var name = $("#name").val();
-          var email = $("#email").val();
-          var password = $("#password").val();
-          var dob = $("#dob").val();
-          var accepted = $("#accepted").is(":checked");
-          
-          if (name && email && password && dob && accepted) {
+<head>
+	
+	<title> REGISTRATION FORM</title>
+    
+<body>
+	<h1>REGISTER FORM</h1>
+	<div id = "reg form">
+        <form id="form">
+        <div id="names" class="inputs">
+            <label for ="First name" > First name :</label>
+            <input id="name" type="text" name=" First Name" placeholder="Your First Name" required><br>
+        </div>
+	    <div class="inputs">
+			<label for="email"> E-mail :</label>
+			<input id="email" type="email" name="email"placeholder="Your email" required>
+		</div>
+        <div class="inputs">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter Password" required/>
+        </div>
+          <div id="dob_id" class="inputs">
+            <label for="dob">Date of Birth</label>
+            <input id="dob" name="dob" type="date" required/>
+          </div>
+        <div class="test">
+            <label for = "agree" required>  I agree to share term and condition</label>
+            <input type="checkbox" name="agree" id="tc"><br>   
+        </div>
+
+        <div>
+            <input type="submit" value="Submit Now">
             
-            var age = calculateAge(dob);
-            if (age >= 18 && age <= 55) { 
-              if (validateEmail(email)) {
-                //Create the object
-                var Obj = {
-                  name: name,
-                  email: email,
-                  password: password,
-                  dob: dob,
-                  accepted: accepted
-                };
-                //Check if data exists
-                if (Data) {
-                  //Add the object to the data
-                  Data.push(Obj);
-                } else {
-                  //Create the array
-                  Data = [Obj];
-                }
-                //Set the data in localStorage
-                localStorage.setItem("registrationData", JSON.stringify(Data));
-                //Populate the table
-                populateTable(Data);
-              } else {
-                alert("INVALID EMAIL!");
-              }
-            } else {
-              alert("INVALID AGE!");
-            }
-          } else {
-            alert("PLEASE FILL ALL THE FIELDS!");
-          }
-          //prevent form submission
-          e.preventDefault();
-        });
+        </div>
+        </form>
         
-        function populateTable(Data){
-          
-          $("#table-data").empty();
-         
-          for (var i = 0; i < Data.length; i++) {
-            
-            var roow = "<tr>";
-            roow += "<td>" + Data[i].name + "</td>";
-            roow += "<td>" + Data[i].email + "</td>";
-            roow += "<td>" + Data[i].password + "</td>";
-            roow += "<td>" + Data[i].dob + "</td>";
-            roow += "<td>" + Data[i].accepted + "</td>";
-            roow += "</tr>";
-            //Add the row to the table
-            $("#table-data").append(roow);
-          }
-        }
-        //Function to calculate age
-        function calculateAge(dateString) {
-          var Today= new Date();
-          var birthDate = new Date(dateString);
-          var age = Today.getFullYear() - birthDate.getFullYear();
-          var m = Today.getMonth() - birthDate.getMonth();
-          if (m < 0 || (m === 0 && Today.getDate() < birthDate.getDate())) {
-            age--;
-          }
-          return age;
-        }
+
         
-        function validateEmail(email) {
-          var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return re.test(String(email).toLowerCase());
-        }
-      });
-    </script>
-  </head>
-  <body>
-    <h1>Registration Form</h1>
-    <form id="registration-form">
-      Name: <input type="text" id="name"/><br/>
-      Email: <input type="text" id="email"/><br/>
-      Password: <input type="password" id="password"/><br/>
-      Date of Birth: <input type="date" id="dob"/><br/>
-      Accepted terms? <input type="checkbox" id="accepted"/><br/>
-      <button type="submit">Submit</button>
-    </form>
-    <h2>Details</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Password</th>
-          <th>Dob</th>
-          <th>Accepted terms?</th>
-        </tr>
-      </thead>
-      <tbody id="table-data">
-      </tbody>
-    </table>
-  </body>
-</html>  
-      
+       
+        <div id="table-box">
+            <h1>entries</h1>
+            <table id="user-table">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Dob</th>
+                <th>Accepted terms?
+          </div>
+    </div>
+	
+    <script src="index.js"></script>
+</body>
+</html>
