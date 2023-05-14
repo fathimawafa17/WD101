@@ -1,108 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <title> Registration Form </title>
+    <title>Registration Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        //Get the data from localStorage
+        var Data = JSON.parse(elocalStorag.getItem("registrationData"));
+        //Check if data exists
+        if (Data) {
+          populateTable(Data);
+        }
+        //Handle the submit button
+        $("#registration-form").submit(function(e){
+          //Get the values
+          var name = $("#name").val();
+          var email = $("#email").val();
+          var password = $("#password").val();
+          var dob = $("#dob").val();
+          var accepted = $("#accepted").is(":checked");
+          
+          if (name && email && password && dob && accepted) {
+            
+            var age = calculateAge(dob);
+            if (age >= 18 && age <= 55) { 
+              if (validateEmail(email)) {
+                //Create the object
+                var Obj = {
+                  name: name,
+                  email: email,
+                  password: password,
+                  dob: dob,
+                  accepted: accepted
+                };
+                //Check if data exists
+                if (Data) {
+                  //Add the object to the data
+                  Data.push(Obj);
+                } else {
+                  //Create the array
+                  Data = [Obj];
+                }
+                //Set the data in localStorage
+                localStorage.setItem("registrationData", JSON.stringify(Data));
+                //Populate the table
+                populateTable(Data);
+              } else {
+                alert("INVALID EMAIL!");
+              }
+            } else {
+              alert("INVALID AGE!");
+            }
+          } else {
+            alert("PLEASE FILL ALL THE FIELDS!");
+          }
+          //prevent form submission
+          e.preventDefault();
+        });
+        
+        function populateTable(Data){
+          
+          $("#table-data").empty();
+         
+          for (var i = 0; i < Data.length; i++) {
+            
+            var roow = "<tr>";
+            roow += "<td>" + Data[i].name + "</td>";
+            roow += "<td>" + Data[i].email + "</td>";
+            roow += "<td>" + Data[i].password + "</td>";
+            roow += "<td>" + Data[i].dob + "</td>";
+            roow += "<td>" + Data[i].accepted + "</td>";
+            roow += "</tr>";
+            //Add the row to the table
+            $("#table-data").append(roow);
+          }
+        }
+        //Function to calculate age
+        function calculateAge(dateString) {
+          var Today= new Date();
+          var birthDate = new Date(dateString);
+          var age = Today.getFullYear() - birthDate.getFullYear();
+          var m = Today.getMonth() - birthDate.getMonth();
+          if (m < 0 || (m === 0 && Today.getDate() < birthDate.getDate())) {
+            age--;
+          }
+          return age;
+        }
+        
+        function validateEmail(email) {
+          var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(String(email).toLowerCase());
+        }
+      });
+    </script>
   </head>
   <body>
-    <h1> Registration Form </h1>
-    <form id="Registration-Form">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="email" required>
-      
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
-      
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
-      
-      <label for="dob">Dob</label>
-      <input type="date" id="dob" name="dob" required>
-      
-      <label for="terms">accepted terms?</label>
-      <input type="checkbox" id="terms" name="terms" required>
-      
-      <button type="submit">submit</button>
+    <h1>Registration Form</h1>
+    <form id="registration-form">
+      Name: <input type="text" id="name"/><br/>
+      Email: <input type="text" id="email"/><br/>
+      Password: <input type="password" id="password"/><br/>
+      Date of Birth: <input type="date" id="dob"/><br/>
+      Accepted terms? <input type="checkbox" id="accepted"/><br/>
+      <button type="submit">Submit</button>
     </form>
-    
-    <table id="Registraton-Table">
+    <h2>Details</h2>
+    <table>
       <thead>
         <tr>
-          <th>name</th>
-          <th>email</th>
-          <th>password</th>
-          <th>dob</th>
-          <th>accepted terms</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Password</th>
+          <th>Dob</th>
+          <th>Accepted terms?</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="table-data">
       </tbody>
     </table>
-    
-    <script>
-      // load data from web
-      if(localstorage.getitem('registrationdata')){
-        document.queryselector('#registration-table tbody').innerHTML = localstorage.getitem('registrationdata');
-      }
-      
-      document.querySelector('registration-form').addEventListener('submit', function(e) {
-
-e.preventDefault();
-
-
-const name =document.querySelector('#name').value;
-
-const email =document.querySelector('#email').value; 
-        
-const password = document.querySelector('#password').value;
-
-const dob =document.querySelector('#dob').value;
-
-const terms = document.querySelector('#terms').checked;
-        
-
-// validate Dob
-
-const currentDate= new Date();
-const dobDate = new Date(dob);
-const diff = currentDate.getFullYear() . dobDate.getFullYear();
-
-if(diff < 18 || diff > 55) {
-
-alert('You must be between 18 and 55 years old.');
-
-return;
-      }
-
-// Validate email
-
-const emailRegex = /^\S+\.\S+$/;
-        if(emailRegex.test(email)) {
-          alert('Invalid email address.');
-
-return;
-                }
-
-
-const newRow = `<tr>
-
-<td>${name}</td>
-<td>${email}</td>
-<td>$(password)</td>
-<td>${dob)</td>
-<td>$[terms}</td>
-
-</tr>`;
-
-document.querySelector('#registration-table tbody').innerHTML += newRow;
-
-
-localStorage.setItem('registrationData', document.querySelector('#registration-table tbody').innerHTML);
-
-});
-
-</script>
-</body>
-</html>
-       
-      
+  </body>
+</html>  
       
